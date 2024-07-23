@@ -22,11 +22,11 @@ import com.example.movieapp.data.models.MovieModel
 import com.example.movieapp.ui.Page
 
 @Composable
-fun MovieListItemView(navController: NavController, movie: MovieModel, modifier: Modifier = Modifier) {
+fun MovieListItemView(navController: NavController, movie: MovieModel) {
     Box(
-        modifier
+        Modifier
             .clickable { navController.navigate(Page.MovieDetails.createRoute(movie.id.toString())) }
-            ) {
+            .fillMaxWidth()) {
         Column(
             Modifier
                 .padding(10.dp)

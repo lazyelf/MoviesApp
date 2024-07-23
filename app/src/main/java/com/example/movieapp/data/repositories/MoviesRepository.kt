@@ -13,10 +13,12 @@ import javax.inject.Inject
 
 class MoviesRepository @Inject constructor(private val api: MovieApi) : IMoviesRepository,
     BaseRepository() {
-    private val pageSize = 25
+    private val pageSize = 12
     override fun getMovies(): Flow<PagingData<MovieModel>> {
         return Pager(
-            config = PagingConfig(enablePlaceholders = false, pageSize = pageSize),
+            config = PagingConfig(enablePlaceholders = false,
+                prefetchDistance = 12,
+                pageSize = pageSize),
             pagingSourceFactory = {
                 MovieDataSource(api)
             }

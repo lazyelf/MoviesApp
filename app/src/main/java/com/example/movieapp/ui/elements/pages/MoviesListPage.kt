@@ -1,10 +1,9 @@
 package com.example.movieapp.ui.elements.pages
 
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -27,7 +26,7 @@ fun MoviesListPage(navController: NavController, viewModel: MoviesListViewModel 
         viewModel.movieList
     }.collectAsLazyPagingItems()
 
-    val listState = rememberLazyListState()
+    val listState = rememberLazyGridState()
     Scaffold(
         topBar = {
             TopAppBar(
@@ -38,22 +37,13 @@ fun MoviesListPage(navController: NavController, viewModel: MoviesListViewModel 
         if (lazyMovieItems.loadState.refresh is LoadState.Error) {
             ErrorView { lazyMovieItems.retry() }
         }
-        LazyColumn(
-            state = listState,
-            modifier = Modifier.padding(it)
+        LazyVerticalGrid(state = listState,
+            modifier = Modifier.padding(it),
+            columns = GridCells.Fixed(count = 3)
         ) {
-            items(lazyMovieItems.itemCount / 3) { index ->
-                Row(Modifier.fillMaxWidth()) {
-                    repeat(3) { itemIndex ->
-                        val movieIndex = index * 3 + itemIndex
-                        lazyMovieItems[movieIndex]?.let { movie ->
-                            MovieListItemView(
-                                navController = navController,
-                                movie,
-                                modifier = Modifier.weight(1f)
-                            )
-                        }
-                    }
+            items(lazyMovieItems.itemCount) { index ->
+                lazyMovieItems[index]?.let { movie ->
+                    MovieListItemView(navController = navController, movie)
                 }
             }
         }
